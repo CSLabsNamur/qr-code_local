@@ -26,3 +26,19 @@ class Activity(models.Model):
 
     def __str__(self):
         return '(%s to %s) at %s' % (self.begin, self.end, self.course)
+
+
+class Teacher(models.Model):
+    first_name = models.CharField(max_length=50)
+    surname = models.CharField(max_length=50)
+
+    def __str__(self):
+        return '%s %s' % (self.surname, self.first_name)
+
+
+class Teaching(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '%s for %s' % (self.teacher, self.course)
