@@ -1,5 +1,5 @@
-from django.shortcuts import render
 from django.http import HttpResponse
+from django.shortcuts import render
 from server.models import Location
 import server.ade_synchro.synchronization as sync
 import server.ade_synchro.room as rooms
@@ -34,4 +34,8 @@ def location_view(request, name=''):
     if not location:
         return HttpResponse('This location does not exist!', status=200)
 
-    return HttpResponse('Location %s exist!' % location_name)
+    context = {
+        'location': location
+    }
+
+    return render(request, 'location.html', context)

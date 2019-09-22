@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Location</title>
+</head>
+<body>
+<h2>Location {{ location }} </h2>
+<ul>
+    <li>Name: <span>{{ location.name }}</span></li>
+    {% if location.description %}
+        <li>Description: <span>{{ location.description }}</span></li>
+    {% else %}
+        <li>Description: <span>empty</span></li>
+    {% endif %}
+</ul>
+</body>
+</html>
