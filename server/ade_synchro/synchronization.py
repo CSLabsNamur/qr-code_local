@@ -1,7 +1,8 @@
+import datetime
 import ics
 import ics.parse
 import requests
-import datetime
+import server.ade_synchro.local as local
 
 
 class SynchronizationError(Exception):
@@ -17,7 +18,7 @@ def get_unamur_ade_ical_url(first_date, last_date):
 
     :param first_date: The first date parameter of the ical (str)
     :param last_date: The last date parameter of the ical (str)
-    :return: An url of the ADE of Unamur that response an ical file
+    :return: An url of the ADE of Unamur that response an ical file (str)
     """
     resources = [
         # Fac INFO
@@ -63,7 +64,14 @@ def get_unamur_events():
     try:
         response = requests.get(url)
         calendar = ics.Calendar(response.text)
+
+        for event in calendar.events:
+            local.get_event_local(event)
+
         return calendar.events
 
     except (requests.ConnectionError, ics.parse.ParseError):
         raise SynchronizationError('Failed to fetch the events from the ADE of Unamur')
+
+
+
