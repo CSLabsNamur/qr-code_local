@@ -2,7 +2,6 @@ import datetime
 import ics
 import ics.parse
 import requests
-import server.ade_synchro.local as local
 
 
 class SynchronizationError(Exception):
@@ -47,6 +46,8 @@ def get_unamur_ade_ical_url(first_date, last_date):
 def get_unamur_events():
     """ Get the events from the ADE of Unamur,
         from one week ago until the end of the academic year (12 september).
+
+        :return: The ical events from ADE of Unamur (Set[ics.Event])
     """
 
     now = datetime.date.today()
@@ -64,9 +65,6 @@ def get_unamur_events():
     try:
         response = requests.get(url)
         calendar = ics.Calendar(response.text)
-
-        for event in calendar.events:
-            local.get_event_local(event)
 
         return calendar.events
 
