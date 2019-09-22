@@ -4,5 +4,6 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('synchro', views.synchronization, name='synchronization'),
+    path('synchro', views.synchronization_view, name='synchronization'),
+    path('location/<str:name>', views.location_view, name='location')
 ]
