@@ -20,7 +20,7 @@ class Course(models.Model):
 class Activity(models.Model):
     begin = models.DateTimeField()
     end = models.DateTimeField()
-    location = models.ForeignKey(Location, on_delete=models.CASCADE)
+    location = models.ForeignKey(Location, on_delete=models.CASCADE, null=True)
     summary = models.TextField(blank=True)
     course = models.ForeignKey(Course, null=True, on_delete=models.SET_NULL)
 

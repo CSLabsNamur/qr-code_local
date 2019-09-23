@@ -7,7 +7,7 @@ def get_event_room(event):
 
     :postcondition: Create the room in the database if it is not already stored.
     :param event: The ical event that may contain a room (ics.Event)
-    :return: The id of the room if it exists, otherwise None
+    :return: The id of the room if it exists (int), otherwise None
     """
 
     room_name = get_room_name(event.location)

@@ -1,8 +1,9 @@
 from django.http import HttpResponse
 from django.shortcuts import render
-from server.models import Location
+from server.models import Location, Activity
 import server.ade_synchro.synchronization as sync
 import server.ade_synchro.room as rooms
+import arrow
 
 
 def index(request):
@@ -16,6 +17,17 @@ def synchronization_view(request):
 
         for event in events:
             location_id = rooms.get_event_room(event)
+            print('Location id:', location_id)
+
+            begin = arrow.get(event.begin).datetime
+            end = arrow.get(event.end).datetime
+
+            activity = Activity(begin=begin, end=end, summary=str(event.description))
+
+            if location_id:
+                activity.location_id = location_id
+
+            activity.save()
 
     except sync.SynchronizationError:
         return HttpResponse('Failed to fetch ADE...')
