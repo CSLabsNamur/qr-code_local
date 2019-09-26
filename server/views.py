@@ -15,6 +15,10 @@ def synchronization_view(request):
     try:
         events = sync.get_unamur_events()
 
+        activities_bulk_max_size = 50
+        activities_bulk = []
+        activities_number = 0
+
         for event in events:
             location_id = rooms.get_event_room(event)
             print('Location id:', location_id)
@@ -27,7 +31,13 @@ def synchronization_view(request):
             if location_id:
                 activity.location_id = location_id
 
-            activity.save()
+            activities_bulk.append(activity)
+            activities_number += 1
+
+            if activities_number > activities_bulk_max_size:
+                Activity.objects.bulk_create(activities_bulk)
+                activities_bulk = []
+                activities_number = 0
 
     except sync.SynchronizationError:
         return HttpResponse('Failed to fetch ADE...')
