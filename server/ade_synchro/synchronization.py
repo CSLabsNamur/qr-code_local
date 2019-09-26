@@ -47,6 +47,7 @@ def get_unamur_events():
     """ Get the events from the ADE of Unamur,
         from one week ago until the end of the academic year (12 september).
 
+        :throws SynchronizationError: if the application fails to synchronize with ADE
         :return: The ical events from ADE of Unamur (Set[ics.Event])
     """
 

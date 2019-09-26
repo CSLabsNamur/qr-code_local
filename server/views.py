@@ -3,6 +3,7 @@ from django.shortcuts import render
 from server.models import Location, Activity
 import server.ade_synchro.synchronization as sync
 import server.ade_synchro.room as rooms
+import server.ade_synchro.activity as activities
 import arrow
 
 
@@ -15,29 +16,8 @@ def synchronization_view(request):
     try:
         events = sync.get_unamur_events()
 
-        activities_bulk_max_size = 50
-        activities_bulk = []
-        activities_number = 0
-
-        for event in events:
-            location_id = rooms.get_event_room(event)
-            print('Location id:', location_id)
-
-            begin = arrow.get(event.begin).datetime
-            end = arrow.get(event.end).datetime
-
-            activity = Activity(begin=begin, end=end, summary=str(event.description))
-
-            if location_id:
-                activity.location_id = location_id
-
-            activities_bulk.append(activity)
-            activities_number += 1
-
-            if activities_number > activities_bulk_max_size:
-                Activity.objects.bulk_create(activities_bulk)
-                activities_bulk = []
-                activities_number = 0
+        activities.flush_activities()
+        activities.save_activities(events)
 
     except sync.SynchronizationError:
         return HttpResponse('Failed to fetch ADE...')
